@@ -19,8 +19,8 @@ jobs:
         displayName: .NET Tool Restore
 
       - powershell: |
-          cat /etc/docker/daemon.json
-          sudo dockerd --tlsverify --tlscacert=ca.pem --tlscert=server-cert.pem --tlskey=server-key.pem -H=localhost:2376
+          docker run --rm --privileged --detach -v /tmp:/certs/ca -v /tmp:/certs/client -e DOCKER_TLS_CERTDIR=/certs docker:dind
+          docker ps -a
         displayName: Expose Docker Daemon Tls Endpoint
 
       - powershell: dotnet cake --target=Restore-NuGet-Packages
