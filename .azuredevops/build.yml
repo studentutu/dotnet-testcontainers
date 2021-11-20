@@ -18,6 +18,9 @@ jobs:
       - powershell: dotnet tool restore
         displayName: .NET Tool Restore
 
+      - powershell: dockerd --tlsverify --tlscacert=ca.pem --tlscert=server-cert.pem --tlskey=server-key.pem -H=localhost:2376
+        displayName: Expose Docker Daemon Tls Endpoint
+
       - powershell: dotnet cake --target=Restore-NuGet-Packages
         displayName: Prepare
 
