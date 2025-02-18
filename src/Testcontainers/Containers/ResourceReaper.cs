@@ -33,7 +33,7 @@ namespace DotNet.Testcontainers.Containers
     /// </summary>
     private const int RetryTimeoutInSeconds = 2;
 
-    private static readonly IImage RyukImage = new DockerImage("testcontainers/ryuk:0.6.0");
+    private static readonly IImage RyukImage = new DockerImage("testcontainers/ryuk:0.9.0");
 
     private static readonly SemaphoreSlim DefaultLock = new SemaphoreSlim(1, 1);
 
@@ -156,7 +156,12 @@ namespace DotNet.Testcontainers.Containers
 
       try
       {
+#if NET6_0_OR_GREATER
+        await _maintainConnectionCts.CancelAsync()
+          .ConfigureAwait(false);
+#else
         _maintainConnectionCts.Cancel();
+#endif
 
         // Close connection before disposing Resource Reaper.
         await _maintainConnectionTask
